@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: "{{ target.database }}"
+    schema: BRONZE
+    tables:
+      - name: healthcare
+      - name: medical_consultations
+
+  - name: silver
+    database: "{{ target.database }}"
+    schema: SILVER
+    tables:
+      - name: doctor_benchmarked
