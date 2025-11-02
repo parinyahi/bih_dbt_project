@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: consultations_base
+    columns:
+      - name: ID
+        tests: [not_null]
+      - name: PATIENT_ID
+        tests: [not_null]
+
+  - name: consultations_curated
+    columns:
+      - name: ID
+        tests: [not_null, unique]
+      - name: SEVERITY
+        tests:
+          - accepted_values:
+              values: ['High','Medium','Low']
+
+  - name: consultations_metrics
+    columns:
+      - name: DOCTOR_ID
+        tests: [not_null]

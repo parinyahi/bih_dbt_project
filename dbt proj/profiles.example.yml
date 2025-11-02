@@ -1,0 +1,27 @@
+bih_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "<your_account>"            # e.g. XYZ12345.ap-southeast-1.aws
+      user: "<your_user>"
+      password: "<your_password>"          # prefer externalbrowser SSO
+      role: "DBT_ROLE_DEV"
+      warehouse: "BIH_DE_WH"
+      database: "BIHPOC"
+      schema: "DEV_<your_user>"
+      threads: 8
+      client_session_keep_alive: true
+      authenticator: snowflake
+    prod:
+      type: snowflake
+      account: "<your_account>"
+      user: "<your_user>"
+      password: "<your_password>"
+      role: "DBT_ROLE_PROD"
+      warehouse: "BIH_PROD_WH"
+      database: "BIHPOC"
+      schema: "PROD"
+      threads: 8
+      client_session_keep_alive: true
+      authenticator: snowflake

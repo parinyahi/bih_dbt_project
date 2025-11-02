@@ -1,0 +1,32 @@
+name: bih_dbt
+version: 1.0.0
+config-version: 2
+
+profile: bih_dbt
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+
+clean-targets: ["target", "dbt_packages"]
+
+require-dbt-version: ">=1.6.0,<2.0.0"
+
+models:
+  bih_dbt:
+    +materialized: view
+    staging:
+      +schema: BRONZE
+    intermediate:
+      +schema: SILVER
+      +materialized: table
+    marts:
+      +schema: GOLD
+      +materialized: view
+
+vars:
+  enable_governance_hooks: false
+  governance_schema: GOVERNANCE

@@ -1,0 +1,33 @@
+{{ config(materialized='view', schema='GOLD') }}
+
+select
+  patient_id,
+  name,
+  age,
+  gender,
+  medical_condition,
+  admission_type,
+  date_of_admission,
+  discharge_date,
+  length_of_stay_days,
+  billing_amount,
+  primary_doctor,
+  hospital,
+  insurance_provider,
+  total_consultations,
+  unique_doctors,
+  specialties_involved,
+  first_consultation_date,
+  last_consultation_date,
+  successful_consults,
+  no_shows,
+  walk_in_consults,
+  scheduled_consults,
+  consultation_success_rate_pct,
+  no_show_rate_pct,
+  consultation_span_days,
+  consultation_specialties,
+  engagement_level,
+  data_quality_flag,
+  current_timestamp as load_timestamp
+from {{ ref('patient_journey_enriched') }}

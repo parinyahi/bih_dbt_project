@@ -1,0 +1,20 @@
+{{ config(materialized='view', schema='BRONZE') }}
+
+select
+  PATIENT_ID,
+  NAME,
+  AGE,
+  GENDER,
+  BLOOD_TYPE,
+  MEDICAL_CONDITION,
+  DATE_OF_ADMISSION,
+  DOCTOR,
+  HOSPITAL,
+  INSURANCE_PROVIDER,
+  BILLING_AMOUNT,
+  ROOM_NUMBER,
+  ADMISSION_TYPE,
+  DISCHARGE_DATE,
+  MEDICATION,
+  TEST_RESULTS
+from {{ source('bronze','HEALTHCARE') }}

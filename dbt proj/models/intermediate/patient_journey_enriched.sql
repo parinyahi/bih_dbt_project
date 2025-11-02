@@ -1,0 +1,37 @@
+{{ config(materialized='table', schema='SILVER') }}
+
+select
+  pb.PATIENT_ID,
+  pb.NAME,
+  pb.AGE,
+  pb.GENDER,
+  pb.MEDICAL_CONDITION,
+  pb.ADMISSION_TYPE,
+  pb.DATE_OF_ADMISSION,
+  pb.DISCHARGE_DATE,
+  pb.LENGTH_OF_STAY_DAYS,
+  pb.BILLING_AMOUNT,
+  pb.DOCTOR as PRIMARY_DOCTOR,
+  pb.HOSPITAL,
+  pb.INSURANCE_PROVIDER,
+  coalesce(cp.TOTAL_CONSULTATIONS, 0) as TOTAL_CONSULTATIONS,
+  coalesce(cp.UNIQUE_DOCTORS, 0) as UNIQUE_DOCTORS,
+  coalesce(cp.SPECIALTIES_INVOLVED, 0) as SPECIALTIES_INVOLVED,
+  cp.FIRST_CONSULTATION_DATE,
+  cp.LAST_CONSULTATION_DATE,
+  coalesce(cp.SUCCESSFUL_CONSULTS, 0) as SUCCESSFUL_CONSULTS,
+  coalesce(cp.NO_SHOWS, 0) as NO_SHOWS,
+  coalesce(cp.WALK_IN_CONSULTS, 0) as WALK_IN_CONSULTS,
+  coalesce(cp.SCHEDULED_CONSULTS, 0) as SCHEDULED_CONSULTS,
+  cp.CONSULTATION_SUCCESS_RATE_PCT,
+  cp.NO_SHOW_RATE_PCT,
+  cp.CONSULTATION_SPAN_DAYS,
+  cp.CONSULTATION_SPECIALTIES,
+  case when coalesce(cp.TOTAL_CONSULTATIONS, 0) >= 5 then 'HIGH_ENGAGEMENT'
+       when coalesce(cp.TOTAL_CONSULTATIONS, 0) >= 2 then 'MEDIUM_ENGAGEMENT'
+       else 'LOW_ENGAGEMENT' end as ENGAGEMENT_LEVEL,
+  case when pb.LENGTH_OF_STAY_DAYS is null then 'INCOMPLETE'
+       when cp.CONSULTATION_SUCCESS_RATE_PCT < 80 then 'HIGH_NOSHOW_RATE'
+       else 'COMPLETE' end as DATA_QUALITY_FLAG
+from {{ ref('patient_base') }} pb
+left join {{ ref('consultation_performance') }} cp on pb.PATIENT_ID = cp.PATIENT_ID
